@@ -54,9 +54,29 @@ module ``about the stock example`` =
     // Feel free to add extra [<Koan>] members here to write
     // tests for yourself along the way. You can also try 
     // using the F# Interactive window to check your progress.
+    let splitCommas (x:string) =
+        x.Split([|','|])
+
+    let priceChange (x:string[]) =
+        let openPrice = System.Double.Parse x.[1]
+        let closePrice = System.Double.Parse x.[4]
+        let delta = abs (openPrice - closePrice) 
+        (x.[0], delta)
+
+    let delta dateAmount =
+        let _, amount = dateAmount
+        amount
 
     [<Koan>]
     let YouGotTheAnswerCorrect() =
-        let result =  __
+        let stocks = 
+            stockData 
+            |> Seq.skip 1 
+            |> Seq.map splitCommas 
+            |> Seq.map priceChange
         
+        //AssertEquality [("2012-03-30", 32.26),("2012-03-29", 32.12)] stocks
+        let largestChange =  Seq.maxBy delta stocks
+        let result, _ = largestChange
+
         AssertEquality "2012-03-13" result
